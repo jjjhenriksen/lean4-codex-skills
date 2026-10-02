@@ -21,6 +21,12 @@ This is the tooling side of an ongoing research interest in **LLM-assisted theor
 | [`lean4-checkpoint`](skills/lean4-checkpoint) | Build-checked save points, sorry/axiom audits, safe staging |
 | [`lean4-doctor`](skills/lean4-doctor) | Diagnose toolchain issues — Lean, Lake, Mathlib, elan, imports |
 
+`lean4-checkpoint` includes a plugin-independent native axiom audit and an
+intentionally incomplete Lean example in its `examples/proof-audit` directory.
+A successful build is reported separately from proof completeness. From this
+checkout, `python3 -m unittest discover -s tests -v` builds the isolated example
+and checks direct/transitive `sorryAx` and custom-axiom reports.
+
 Each skill is intentionally **thin and focused** — designed to point Codex toward the right workflow without loading a monolithic instruction file every time.
 
 
