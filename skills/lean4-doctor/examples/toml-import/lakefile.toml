@@ -1,0 +1,8 @@
+name = "toml_import_fixture"
+version = "0.1.0"
+defaultTargets = ["DoctorFixture"]
+
+[[lean_lib]]
+name = "DoctorFixture"
+# Deliberately wrong: sources live under Src, not MissingSource.
+srcDir = "MissingSource"
