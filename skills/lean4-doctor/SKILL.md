@@ -28,7 +28,7 @@ without a plugin. Use scripts only via the resolved `$LEAN4_SCRIPTS`.
 
 Relevant upstream docs:
 
-- `$LEAN4_PLUGIN_ROOT/commands/doctor.md`
+- `$LEAN4_PLUGIN_ROOT/commands/diagnose.md`
 - `$LEAN4_PLUGIN_ROOT/skills/lean4/SKILL.md`
 
 ## Checks

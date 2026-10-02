@@ -50,34 +50,61 @@ For best results, use these skills in a Lean workspace with:
 - `lakefile.lean` or `lakefile.toml`
 - Working `lean` and `lake` commands (usually via `elan`)
 
-### Optional: Vendor Plugin
+### Optional: Pin the upstream workflow pack
 
-If your workspace also contains Cameron Freer's `lean4-skills` workflow pack:
+The standalone skill installation above remains supported without upstream
+code. Native Lean/Lake workflows and the bundled doctor/checkpoint examples
+work independently; missing optional references are reported and skipped.
 
-```
-vendor/lean4-plugin/
-```
+The authoritative upstream is [Cameron Freer's lean4-skills](https://github.com/cameronfreer/lean4-skills).
+The command/guide/script layout has been verified at
+[`b6243b85b9b0a0ddff5bb6773889044daf687f8e`](https://github.com/cameronfreer/lean4-skills/tree/b6243b85b9b0a0ddff5bb6773889044daf687f8e/plugins/lean4).
+`optional-upstream.json` records that revision and the `plugins/lean4` plugin
+subdirectory. This is a file-layout compatibility check; it does not certify
+upstream proof automation or install/trust its host hooks.
 
-...set an env file so the skills can reference it:
+From a Lean workspace, acquire it into a new destination (preserve any existing
+checkout rather than replacing it):
 
 ```bash
-export LEAN4_PLUGIN_ROOT="${LEAN4_PLUGIN_ROOT:-$PWD/vendor/lean4-plugin}"
-export LEAN4_SCRIPTS="${LEAN4_SCRIPTS:-$LEAN4_PLUGIN_ROOT/lib/scripts}"
+git clone --no-checkout https://github.com/cameronfreer/lean4-skills.git vendor/lean4-skills
+git -C vendor/lean4-skills checkout --detach b6243b85b9b0a0ddff5bb6773889044daf687f8e
+git -C vendor/lean4-skills rev-parse HEAD
+export LEAN4_PLUGIN_ROOT="$PWD/vendor/lean4-skills/plugins/lean4"
+export LEAN4_SCRIPTS="$LEAN4_PLUGIN_ROOT/lib/scripts"
 export LEAN4_PYTHON_BIN="${LEAN4_PYTHON_BIN:-python3}"
 ```
 
-Save those exports in `lean4-codex.env`, or set `LEAN4_PLUGIN_ROOT` to another
-absolute plugin directory (quoted when it contains spaces). Every skill loads
-an existing env file before applying defaults and resolves its references
-through that root. `LEAN4_SCRIPTS` defaults to its `lib/scripts` directory; an
-explicit script-root override remains respected. Missing optional files are
-reported and skipped while native Lean/Lake workflows continue.
+The checkout root is not the plugin root. Commands live under
+`$LEAN4_PLUGIN_ROOT/commands`, the canonical skill/references under
+`$LEAN4_PLUGIN_ROOT/skills/lean4`, and helpers under `$LEAN4_SCRIPTS`.
+At this revision the upstream diagnostic guide is `commands/diagnose.md`;
+the Codex split skill remains named `lean4-doctor` and points to that guide.
 
-Then source the env file before starting your Codex session:
+From this skill-pack checkout, verify an acquired plugin (use its absolute path
+if the Lean workspace is elsewhere):
 
 ```bash
-source ./lean4-codex.env 2>/dev/null || true
+python3 scripts/check_optional_plugin.py \
+  --root "$LEAN4_PLUGIN_ROOT" --require-compatible --require-pinned
 ```
+
+The checker reads all guide/reference paths requested by the seven skills and
+representative helper files, verifies the selected checkout revision/cleanliness,
+and prints JSON. It does not run helper code. A missing default plugin is
+`absent_optional` with exit zero; explicit `--require-compatible` fails on
+missing files, and `--require-pinned` also fails for an unknown/different revision
+or dirty checkout. Keep that evidence separate from Lean build/proof results.
+CI fetches the recorded revision into an isolated checkout and repeats the
+layout check, so changed references must stay compatible with the tested pin.
+
+Save the exports in a workspace `lean4-codex.env` if desired. Every split skill
+loads an existing env file before applying defaults. Without an explicit root,
+`LEAN4_PLUGIN_ROOT` defaults to `$PWD/vendor/lean4-plugin`, preserving earlier
+workspace layouts; `LEAN4_SCRIPTS` defaults to its `lib/scripts` directory.
+Explicit script-root overrides remain respected, and quoted root paths may
+contain spaces. To try a newer upstream version, verify its layout and native
+workflows in a separate checkout before updating the recorded pin.
 
 
 ## Example Prompts

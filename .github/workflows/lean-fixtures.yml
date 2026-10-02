@@ -23,3 +23,31 @@ jobs:
           use-mathlib-cache: 'false'
           use-github-cache: 'false'
       - run: python -m unittest discover -s tests -v
+  optional-upstream-layout:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch and inspect the recorded upstream revision
+        run: |
+          python - <<'PYTHON'
+          import json
+          import os
+          import subprocess
+          import sys
+          from pathlib import Path
+          spec = json.loads(Path('optional-upstream.json').read_text())
+          checkout = Path(os.environ['RUNNER_TEMP']) / 'lean-upstream-layout'
+          subprocess.run(['git', 'init', str(checkout)], check=True)
+          subprocess.run(['git', '-C', str(checkout), 'remote', 'add', 'origin', spec['repository']], check=True)
+          subprocess.run(['git', '-C', str(checkout), 'fetch', '--depth', '1', 'origin', spec['revision']], check=True)
+          subprocess.run(['git', '-C', str(checkout), 'checkout', '--detach', 'FETCH_HEAD'], check=True)
+          subprocess.run([sys.executable, 'scripts/check_optional_plugin.py', '--root', str(checkout / spec['plugin_directory']), '--require-compatible', '--require-pinned', '--output', 'reports/optional-plugin-layout.json'], check=True)
+          PYTHON
+      - uses: actions/upload-artifact@v4
+        with:
+          name: optional-upstream-layout-evidence
+          path: reports/optional-plugin-layout.json
