@@ -1,0 +1,6 @@
+{
+  "repository": "https://github.com/cameronfreer/lean4-skills.git",
+  "revision": "b6243b85b9b0a0ddff5bb6773889044daf687f8e",
+  "plugin_directory": "plugins/lean4",
+  "script_files": ["lib/scripts/README.md", "lib/scripts/sorry_analyzer.py", "lib/scripts/check_axioms_inline.sh"]
+}
