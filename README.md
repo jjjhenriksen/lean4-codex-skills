@@ -2,7 +2,6 @@
 
 [![Codex](https://img.shields.io/badge/Codex-v2-4B0082?style=flat-square)](https://github.com/openclaw/codex)
 [![Lean 4](https://img.shields.io/badge/Lean_4-latest-FF6F00?style=flat-square)](https://lean-lang.org)
-[![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
 **Codex skill pack for Lean 4 formalization workflows.** Teach your coding agent to write Lean — from drafting theorem statements and filling sorries, to diagnosing toolchain issues and reviewing proofs.
 
@@ -126,3 +125,10 @@ These skills were adapted from two sources:
 They do not vendor the full upstream Lean workflow pack. If you want the scripts and full command references, add that repository separately under your Lean workspace.
 
 
+
+## Licensing status
+
+This repository currently publishes no project license file. The MIT badge
+linked to a nonexistent `LICENSE` and has been removed. Adding a license
+requires an explicit maintainer licensing decision and attribution review for
+the adapted source material described above.
