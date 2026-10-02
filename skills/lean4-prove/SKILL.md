@@ -9,19 +9,30 @@ Use this skill for proof work on existing Lean declarations.
 
 ## Setup
 
-In a workspace with the vendored plugin:
+Resolve the optional plugin root for this workspace. An existing
+`lean4-codex.env` is loaded first; unset variables use the documented defaults:
 
 ```bash
-source ./lean4-codex.env 2>/dev/null || true
+if test -f ./lean4-codex.env; then
+  source ./lean4-codex.env
+fi
+export LEAN4_PLUGIN_ROOT="${LEAN4_PLUGIN_ROOT:-$PWD/vendor/lean4-plugin}"
+export LEAN4_SCRIPTS="${LEAN4_SCRIPTS:-$LEAN4_PLUGIN_ROOT/lib/scripts}"
+export LEAN4_PYTHON_BIN="${LEAN4_PYTHON_BIN:-python3}"
 ```
+
+Resolve each reference below against `$LEAN4_PLUGIN_ROOT`, preserving spaces
+in the path. Check for each file before reading it; report and skip absent
+optional guidance, then continue the native workflow. The skill remains usable
+without a plugin. Use scripts only via the resolved `$LEAN4_SCRIPTS`.
 
 Relevant upstream docs:
 
-- `vendor/lean4-plugin/commands/prove.md`
-- `vendor/lean4-plugin/commands/autoprove.md`
-- `vendor/lean4-plugin/skills/lean4/SKILL.md`
-- `vendor/lean4-plugin/skills/lean4/references/sorry-filling.md`
-- `vendor/lean4-plugin/skills/lean4/references/cycle-engine.md`
+- `$LEAN4_PLUGIN_ROOT/commands/prove.md`
+- `$LEAN4_PLUGIN_ROOT/commands/autoprove.md`
+- `$LEAN4_PLUGIN_ROOT/skills/lean4/SKILL.md`
+- `$LEAN4_PLUGIN_ROOT/skills/lean4/references/sorry-filling.md`
+- `$LEAN4_PLUGIN_ROOT/skills/lean4/references/cycle-engine.md`
 
 Read the reference files only when the proof is nontrivial or a proof loop is requested.
 

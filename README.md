@@ -62,12 +62,19 @@ vendor/lean4-plugin/
 ...set an env file so the skills can reference it:
 
 ```bash
-export LEAN4_PLUGIN_ROOT="$PWD/vendor/lean4-plugin"
-export LEAN4_SCRIPTS="$LEAN4_PLUGIN_ROOT/lib/scripts"
+export LEAN4_PLUGIN_ROOT="${LEAN4_PLUGIN_ROOT:-$PWD/vendor/lean4-plugin}"
+export LEAN4_SCRIPTS="${LEAN4_SCRIPTS:-$LEAN4_PLUGIN_ROOT/lib/scripts}"
 export LEAN4_PYTHON_BIN="${LEAN4_PYTHON_BIN:-python3}"
 ```
 
-Then source it before starting your Codex session:
+Save those exports in `lean4-codex.env`, or set `LEAN4_PLUGIN_ROOT` to another
+absolute plugin directory (quoted when it contains spaces). Every skill loads
+an existing env file before applying defaults and resolves its references
+through that root. `LEAN4_SCRIPTS` defaults to its `lib/scripts` directory; an
+explicit script-root override remains respected. Missing optional files are
+reported and skipped while native Lean/Lake workflows continue.
+
+Then source the env file before starting your Codex session:
 
 ```bash
 source ./lean4-codex.env 2>/dev/null || true

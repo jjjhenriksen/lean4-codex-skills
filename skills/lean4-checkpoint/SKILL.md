@@ -9,16 +9,27 @@ Use this skill for a deliberate Lean checkpoint after meaningful proof or code p
 
 ## Setup
 
-In a workspace with the vendored plugin:
+Resolve the optional plugin root for this workspace. An existing
+`lean4-codex.env` is loaded first; unset variables use the documented defaults:
 
 ```bash
-source ./lean4-codex.env 2>/dev/null || true
+if test -f ./lean4-codex.env; then
+  source ./lean4-codex.env
+fi
+export LEAN4_PLUGIN_ROOT="${LEAN4_PLUGIN_ROOT:-$PWD/vendor/lean4-plugin}"
+export LEAN4_SCRIPTS="${LEAN4_SCRIPTS:-$LEAN4_PLUGIN_ROOT/lib/scripts}"
+export LEAN4_PYTHON_BIN="${LEAN4_PYTHON_BIN:-python3}"
 ```
+
+Resolve each reference below against `$LEAN4_PLUGIN_ROOT`, preserving spaces
+in the path. Check for each file before reading it; report and skip absent
+optional guidance, then continue the native workflow. The skill remains usable
+without a plugin. Use scripts only via the resolved `$LEAN4_SCRIPTS`.
 
 Relevant upstream docs:
 
-- `vendor/lean4-plugin/commands/checkpoint.md`
-- `vendor/lean4-plugin/skills/lean4/SKILL.md`
+- `$LEAN4_PLUGIN_ROOT/commands/checkpoint.md`
+- `$LEAN4_PLUGIN_ROOT/skills/lean4/SKILL.md`
 
 ## Workflow
 

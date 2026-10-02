@@ -7,9 +7,9 @@ description: "Use when the user wants to learn Lean 4, explore Lean as an intera
 
 Use this skill for Lean 4 learning and Lean project work in Codex. It combines:
 
-- the local Lean workflow pack at `vendor/lean4-plugin`, when present in the workspace
+- the optional Lean workflow pack at `$LEAN4_PLUGIN_ROOT`, when present in the workspace
 - the mentor posture in `references/mentor-orientation.md`
-- the upstream Lean 4 skill instructions in `vendor/lean4-plugin/skills/lean4/SKILL.md`
+- the upstream Lean 4 skill instructions in `$LEAN4_PLUGIN_ROOT/skills/lean4/SKILL.md`
 
 For operational work, prefer the narrower split skills when they match:
 
@@ -22,17 +22,22 @@ For operational work, prefer the narrower split skills when they match:
 
 ## First Move
 
-1. Check whether the current workspace has `vendor/lean4-plugin`.
-2. If present, set these for the session before using bundled scripts:
+1. Resolve the optional plugin root, loading an existing workspace env file
+   first. Defaults apply only to unset variables:
 
 ```bash
-export LEAN4_PLUGIN_ROOT="$PWD/vendor/lean4-plugin"
-export LEAN4_SCRIPTS="$LEAN4_PLUGIN_ROOT/lib/scripts"
+if test -f ./lean4-codex.env; then
+  source ./lean4-codex.env
+fi
+export LEAN4_PLUGIN_ROOT="${LEAN4_PLUGIN_ROOT:-$PWD/vendor/lean4-plugin}"
+export LEAN4_SCRIPTS="${LEAN4_SCRIPTS:-$LEAN4_PLUGIN_ROOT/lib/scripts}"
 export LEAN4_PYTHON_BIN="${LEAN4_PYTHON_BIN:-python3}"
 ```
 
+2. Check the resolved optional root and requested references. Missing optional
+   files are reported and skipped; continue the native Lean/Lake workflow.
 3. If the user is learning Lean, read `references/mentor-orientation.md` and keep the conversation exploratory.
-4. If editing or proving Lean, read `vendor/lean4-plugin/skills/lean4/SKILL.md` and follow its safety rules.
+4. If editing or proving Lean, read `$LEAN4_PLUGIN_ROOT/skills/lean4/SKILL.md` if present and follow its safety rules alongside the native skill workflow.
 
 ## Teaching Posture
 
