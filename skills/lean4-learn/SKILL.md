@@ -12,13 +12,18 @@ Use this skill for Lean learning and exploration. Keep the interaction concrete,
 From a Lean workspace that vendors `lean4-plugin`, run commands with:
 
 ```bash
-source ./lean4-codex.env 2>/dev/null || true
+if test -f ./lean4-codex.env; then
+  source ./lean4-codex.env
+fi
+export LEAN4_PLUGIN_ROOT="${LEAN4_PLUGIN_ROOT:-$PWD/vendor/lean4-plugin}"
+export LEAN4_SCRIPTS="${LEAN4_SCRIPTS:-$LEAN4_PLUGIN_ROOT/lib/scripts}"
+export LEAN4_PYTHON_BIN="${LEAN4_PYTHON_BIN:-python3}"
 ```
 
 If the task is in `/Users/jacquelinehenriksen/Documents/Lean4`, the upstream workflow docs are:
 
-- `vendor/lean4-plugin/commands/learn.md`
-- `vendor/lean4-plugin/skills/lean4/SKILL.md`
+- `$LEAN4_PLUGIN_ROOT/commands/learn.md`
+- `$LEAN4_PLUGIN_ROOT/skills/lean4/SKILL.md`
 - `~/.codex/skills/lean4-mentor/references/mentor-orientation.md`
 
 Read only the sections needed for the user’s topic.
