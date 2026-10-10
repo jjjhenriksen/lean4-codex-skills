@@ -31,15 +31,25 @@ Each skill is intentionally **thin and focused** — designed to point Codex tow
 
 ## Install
 
-```bash
-cp -R skills/lean4-* ~/.codex/skills/
-```
-
-Start a new Codex session so the skills are discovered, or run:
+From this checkout, use Python 3.10+ to preview all seven complete bundles,
+then install them in the intended Codex skill directory:
 
 ```bash
-codexctl skills rescan
+python3 scripts/install_skills.py --dest "$HOME/.codex/skills" --dry-run
+python3 scripts/install_skills.py --dest "$HOME/.codex/skills"
 ```
+
+The preview creates no files. Installation checks every destination before
+copying and refuses existing files, directories, and symlinks. It includes the
+bundled examples, references, and helper scripts. If copying fails, it removes
+only the new skill directories from that attempt; unrelated skills are preserved.
+
+To update an existing installation, first inspect and move the seven existing
+skill folders to a new backup directory **outside all skill roots**. Keep local
+edits in that backup and review them before reapplying them to the new version.
+The installer does not merge or overwrite existing skills.
+
+Start a new Codex session after installation so the skills are discovered.
 
 
 ## Recommended Workspace Setup
